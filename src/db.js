@@ -1,11 +1,12 @@
+require("dotenv").config();
 const mysql = require("mysql2");
 
 const conexao = mysql.createConnection({
-    host: "mainline.proxy.rlwy.net",
-    user: "root",
-    password: "ZHGVEnkeLbuIYBJiRihZciaDOmSxAGaF",
-    database: "railway",
-    port: 17324
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 });
 
 conexao.connect((erro) => {
