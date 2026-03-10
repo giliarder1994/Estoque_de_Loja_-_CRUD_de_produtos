@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const conexao = require("../db");
+const jwt = require("jsonwebtoken");
 
 exports.cadastrar = async (req, res) => {
     try {
@@ -51,7 +52,13 @@ exports.login = async (req, res) => {
             return res.status(401).json({ erro: "Email ou senha inválidos" });
         }
 
-        return res.status(200).json({ mensagem: "Login realizado com sucesso!", id: usuario.id, nome: usuario.nome });
+        const token = jwt.sign(
+            { id: usuario.id, nome: usuario.nome },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+        
+        return res.status(200).json({ token });
 
     } catch (erro) {
         return res.status(500).json({ erro: "Erro ao realizar login" });
