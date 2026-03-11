@@ -2,6 +2,8 @@
 
 API REST de Estoque de Loja desenvolvida com Node.js, Express e MySQL, com autenticação JWT, criptografia de senhas com bcrypt e paginação de resultados.
 
+🌐 **Deploy:** https://estoquedeloja-cruddeprodutos-production.up.railway.app
+
 ---
 
 ## 🚀 Tecnologias
@@ -87,6 +89,8 @@ node src/app.js
 ```
 
 Servidor rodando em `http://localhost:3000`
+
+> Em produção: https://estoquedeloja-cruddeprodutos-production.up.railway.app
 
 ---
 
