@@ -148,13 +148,13 @@ O token é obtido ao fazer login na rota `/login`.
 
 ### Produtos (protegidas — requer token)
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | `/produtos` | Listar todos os produtos |
-| GET | `/produtos/:id` | Buscar produto por ID |
-| POST | `/produtos` | Criar novo produto |
-| PUT | `/produtos/:id` | Atualizar produto |
-| DELETE | `/produtos/:id` | Deletar produto |
+| Método | Rota               | Descrição                |
+|--------|--------------------|--------------------------|
+| GET    | `/produtos`        | Listar todos os produtos |
+| GET    | `/produtos/:id`    | Buscar produto por ID    |
+| POST   | `/produtos`        | Criar novo produto       |
+| PUT    | `/produtos/:id`    | Atualizar produto        |
+| DELETE | `/produtos/:id`    | Deletar produto          |
 
 #### GET /produtos
 Suporta filtros e paginação via query string:
@@ -224,16 +224,16 @@ GET /produtos?categoria=Eletronicos&pagina=1&limite=5
 
 ## 📊 Status HTTP utilizados
 
-| Código | Descrição |
-|--------|-----------|
-| 200 | OK — requisição bem sucedida |
-| 201 | Created — recurso criado |
-| 204 | No Content — deletado com sucesso |
-| 400 | Bad Request — dados inválidos |
-| 401 | Unauthorized — não autenticado |
-| 404 | Not Found — recurso não encontrado |
-| 409 | Conflict — email já cadastrado |
-| 500 | Internal Server Error — erro no servidor |
+| Código | Descrição                                |
+|--------|------------------------------------------|
+| 200    | OK — requisição bem sucedida             |
+| 201    | Created — recurso criado                 |
+| 204    | No Content — deletado com sucesso        |
+| 400    | Bad Request — dados inválidos            |
+| 401    | Unauthorized — não autenticado           |
+| 404    | Not Found — recurso não encontrado       |
+| 409    | Conflict — email já cadastrado           |
+| 500    | Internal Server Error — erro no servidor |
 
 ---
 
