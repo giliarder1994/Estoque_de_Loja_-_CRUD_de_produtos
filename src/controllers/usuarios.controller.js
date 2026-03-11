@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const conexao = require("../db");
 const jwt = require("jsonwebtoken");
 
-exports.cadastrar = async (req, res) => {
+exports.cadastrar = async (req, res, next) => {
     try {
         const { nome, email, senha } = req.body;
 
@@ -23,11 +23,11 @@ exports.cadastrar = async (req, res) => {
         if (erro.code === "ER_DUP_ENTRY") {
             return res.status(409).json({ erro: "Email já cadastrado" });
         }
-        return res.status(500).json({ erro: "Erro ao cadastrar usuário" });
+        return next(erro);
     }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
     try {
         const { email, senha } = req.body;
 
@@ -61,6 +61,6 @@ exports.login = async (req, res) => {
         return res.status(200).json({ token });
 
     } catch (erro) {
-        return res.status(500).json({ erro: "Erro ao realizar login" });
+        return next(erro);
     }
 };
