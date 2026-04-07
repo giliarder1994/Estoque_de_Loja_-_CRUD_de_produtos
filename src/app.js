@@ -16,4 +16,4 @@ app.use(erroMiddleware);
 
 
 
-app.listen(porta, () => {console.log("Servidor rodando")})
+module.exports = app;
