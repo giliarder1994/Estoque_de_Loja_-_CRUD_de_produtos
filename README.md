@@ -118,8 +118,8 @@ O token é obtido ao fazer login na rota `/login`.
 #### POST /cadastrar
 ```json
 {
-    "nome": "Giliarde",
-    "email": "giliarde@email.com",
+    "nome": "user",
+    "email": "user@email.com",
     "senha": "123456"
 }
 ```
@@ -128,15 +128,15 @@ O token é obtido ao fazer login na rota `/login`.
 ```json
 {
     "id": 1,
-    "nome": "Giliarde",
-    "email": "giliarde@email.com"
+    "nome": "user",
+    "email": "user@email.com"
 }
 ```
 
 #### POST /login
 ```json
 {
-    "email": "giliarde@email.com",
+    "email": "user@email.com",
     "senha": "123456"
 }
 ```
