@@ -144,6 +144,7 @@ npm test
 ## 👨‍💻 Autor
 
 **Giliarde Rodrigues**
+
 Desenvolvedor focado em Backend e Software Engineering, com experiência em transição de carreira e projetos voltados para eficiência logística e gestão.
 
 ---
