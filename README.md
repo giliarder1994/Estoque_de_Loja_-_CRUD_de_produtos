@@ -1,244 +1,149 @@
-# 🛒 Estoque de Loja - API REST
+# 📦 Estoque de Loja - API REST
 
-API REST de Estoque de Loja desenvolvida com Node.js, Express e MySQL, com autenticação JWT, criptografia de senhas com bcrypt e paginação de resultados.
-
-
----
+API REST para gerenciamento de estoque e controle de produtos. Desenvolvida com **Node.js**, **Express** e **MySQL**, o sistema conta com autenticação JWT, criptografia de senhas e uma arquitetura organizada em camadas para facilitar a manutenção e escalabilidade.
 
 ## 🚀 Tecnologias
 
-- **Node.js** — ambiente de execução
-- **Express** — framework web
-- **MySQL** — banco de dados relacional
-- **mysql2** — driver de conexão com o banco
-- **bcrypt** — criptografia de senhas
-- **jsonwebtoken** — autenticação via JWT
-- **dotenv** — variáveis de ambiente
-
----
+* **Node.js** — Ambiente de execução JavaScript
+* **Express** — Framework para construção da API
+* **MySQL** — Banco de dados relacional
+* **mysql2** — Driver MySQL com suporte a Promises
+* **JWT (JSON Web Token)** — Autenticação segura via Token
+* **bcryptjs** — Criptografia de senhas
+* **Jest & Supertest** — Testes unitários e de integração
+* **dotenv** — Gerenciamento de variáveis de ambiente
 
 ## 📁 Estrutura do Projeto
 
-```
+```text
 src/
- ├── app.js
- ├── db.js
+ ├── config/
+ │    └── db.js              # Configuração do Pool de conexão MySQL
+ │
  ├── controllers/
  │    ├── produtos.controller.js
  │    └── usuarios.controller.js
+ │
+ ├── middlewares/
+ │    ├── auth.middleware.js # Proteção de rotas via JWT
+ │    └── erro.middleware.js # Tratamento centralizado de erros
+ │
  ├── routes/
  │    ├── produtos.routes.js
  │    └── usuarios.routes.js
- └── middlewares/
-      ├── auth.middleware.js
-      └── erro.middleware.js
+ │
+ ├── services/
+ │    ├── produtoService.js  # Regras de negócio e Queries SQL
+ │    └── usuarioService.js  # Gestão de usuários no banco
+ │
+ ├── app.js                  # Configurações do Express
+ └── server.js               # Inicialização do servidor
+
+sql/
+ └── setup.sql               # Script de criação das tabelas
+
+tests/
+ ├── integration/            # Testes de endpoints
+ └── unit/                   # Testes de lógica e middlewares
+
 ```
 
----
+## ⚙️ Funcionalidades
+
+### 🔐 Autenticação
+
+* **Cadastro de usuários:** Registro com senha criptografada.
+* **Login:** Autenticação por e-mail/senha com geração de token JWT.
+* **Proteção:** Middlewares que garantem que apenas usuários logados gerenciem o estoque.
+
+### 📦 Gerenciamento de Estoque (CRUD)
+
+* **Listar Produtos:** Com suporte a filtros por categoria e paginação.
+* **Buscar por ID:** Detalhes de um item específico.
+* **Criar Produto:** Adição de novos itens com validação de campos.
+* **Editar Produto:** Atualização de preços, quantidades e nomes.
+* **Deletar:** Remoção definitiva de itens do estoque.
+
+## 🗄️ Estrutura do Banco de Dados
+
+O sistema opera com duas tabelas principais:
+
+1. **usuarios:** Armazena `nome`, `email` (único) e `senha` (hash).
+2. **produtos:** Armazena `nome`, `preco`, `quantidade` e `categoria`.
 
 ## ⚙️ Como rodar localmente
 
-**1. Clone o repositório**
+### 1. Clone o repositório
+
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/seu-usuario/estoque-loja-api.git
+cd estoque-loja-api
+
 ```
 
-**2. Instale as dependências**
+### 2. Instale as dependências
+
 ```bash
 npm install
+
 ```
 
-**3. Configure as variáveis de ambiente**
+### 3. Configure as variáveis de ambiente
 
-Crie um arquivo `.env` na raiz do projeto baseado no `.env.example`:
-```
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+PORT=3000
 DB_HOST=localhost
-DB_USER=root
+DB_USER=seu_usuario
 DB_PASSWORD=sua_senha
-DB_NAME=loja
-DB_PORT=3306
-JWT_SECRET=sua_chave_secreta
+DB_NAME=estoque_loja
+JWT_SECRET=sua_chave_secreta_aqui
+
 ```
 
-**4. Crie o banco de dados**
-```sql
-CREATE DATABASE loja;
-USE loja;
+### 4. Configure o banco de dados
 
-CREATE TABLE produtos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100),
-    preco DECIMAL(10,2),
-    quantidade INT,
-    categoria VARCHAR(50)
-);
+Execute o script SQL localizado em `sql/setup.sql` no seu gerenciador MySQL (MySQL Workbench, DBeaver, etc).
 
-CREATE TABLE usuarios (
-    id INT AUTO_AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100),
-    email VARCHAR(100) UNIQUE,
-    senha VARCHAR(255)
-);
-```
+### 5. Inicie o servidor
 
-**5. Inicie o servidor**
+**Ambiente de desenvolvimento (com nodemon):**
+
 ```bash
-node src/app.js
-```
-
-Servidor rodando em `http://localhost:3000`
-
-
----
-
-## 🔐 Autenticação
-
-As rotas de produtos são protegidas. Para acessá-las, é necessário enviar o token JWT no header:
+npm run dev
 
 ```
-Authorization: Bearer SEU_TOKEN
-```
 
-O token é obtido ao fazer login na rota `/login`.
+**Rodar Testes:**
 
----
-
-## 📋 Rotas
-
-### Usuários (públicas)
-
-| Método | Rota         | Descrição                    |
-|--------|--------------|------------------------------|
-| POST   | `/cadastrar` | Cadastrar novo usuário       |
-| POST   | `/login`     | Realizar login e obter token |
-
-#### POST /cadastrar
-```json
-{
-    "nome": "user",
-    "email": "user@email.com",
-    "senha": "123456"
-}
-```
-
-**Resposta 201:**
-```json
-{
-    "id": 1,
-    "nome": "user",
-    "email": "user@email.com"
-}
-```
-
-#### POST /login
-```json
-{
-    "email": "user@email.com",
-    "senha": "123456"
-}
-```
-
-**Resposta 200:**
-```json
-{
-    "token": "eyJhbGciOiJIUzI1NiJ9..."
-}
-```
-
----
-
-### Produtos (protegidas — requer token)
-
-| Método | Rota               | Descrição                |
-|--------|--------------------|--------------------------|
-| GET    | `/produtos`        | Listar todos os produtos |
-| GET    | `/produtos/:id`    | Buscar produto por ID    |
-| POST   | `/produtos`        | Criar novo produto       |
-| PUT    | `/produtos/:id`    | Atualizar produto        |
-| DELETE | `/produtos/:id`    | Deletar produto          |
-
-#### GET /produtos
-Suporta filtros e paginação via query string:
+```bash
+npm test
 
 ```
-GET /produtos?categoria=Eletronicos
-GET /produtos?pagina=1&limite=10
-GET /produtos?categoria=Eletronicos&pagina=1&limite=5
-```
 
-**Resposta 200:**
-```json
-[
-    {
-        "id": 1,
-        "nome": "Notebook",
-        "preco": "3500.00",
-        "quantidade": 1,
-        "categoria": "Eletronicos"
-    }
-]
-```
+## 📋 Principais Rotas
 
-#### POST /produtos
-```json
-{
-    "nome": "Notebook",
-    "preco": 3500,
-    "quantidade": 1,
-    "categoria": "Eletronicos"
-}
-```
+### 🔐 Autenticação
 
-**Resposta 201:**
-```json
-{
-    "id": 1,
-    "nome": "Notebook",
-    "preco": 3500,
-    "quantidade": 1,
-    "categoria": "Eletronicos"
-}
-```
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| POST | `/auth/registrar` | Cadastro de novo usuário |
+| POST | `/auth/login` | Login e recebimento do Token |
 
-#### PUT /produtos/:id
-```json
-{
-    "nome": "Notebook Gamer",
-    "preco": 5000,
-    "quantidade": 2,
-    "categoria": "Eletronicos"
-}
-```
+### 📦 Produtos (Requer Token)
 
-**Resposta 200:**
-```json
-{
-    "id": 1,
-    "nome": "Notebook Gamer",
-    "preco": 5000,
-    "quantidade": 2,
-    "categoria": "Eletronicos"
-}
-```
-
----
-
-## 📊 Status HTTP utilizados
-
-| Código | Descrição                                |
-|--------|------------------------------------------|
-| 200    | OK — requisição bem sucedida             |
-| 201    | Created — recurso criado                 |
-| 204    | No Content — deletado com sucesso        |
-| 400    | Bad Request — dados inválidos            |
-| 401    | Unauthorized — não autenticado           |
-| 404    | Not Found — recurso não encontrado       |
-| 409    | Conflict — email já cadastrado           |
-| 500    | Internal Server Error — erro no servidor |
-
----
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| GET | `/produtos` | Lista produtos (Paginação: ?pagina=1&limite=10) |
+| GET | `/produtos/:id` | Busca um produto específico |
+| POST | `/produtos` | Cadastra um novo produto |
+| PUT | `/produtos/:id` | Atualiza dados do produto |
+| DELETE | `/produtos/:id` | Remove produto do estoque |
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **Giliarde Rodrigues**
+**Giliarde Rodrigues**
+Desenvolvedor focado em Backend e Software Engineering, com experiência em transição de carreira e projetos voltados para eficiência logística e gestão.
+
+---
